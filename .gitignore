@@ -1,0 +1,56 @@
+# Laravel Backend
+/backend/.env
+/backend/.env.local
+/backend/.env.*.local
+/backend/vendor/
+/backend/storage/
+/backend/bootstrap/cache/
+/backend/.php_cs.cache
+/backend/.phpunit.result.cache
+
+# Node/Frontend
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.env.local
+/frontend/.env.*.local
+/frontend/build/
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.vim/
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+desktop.ini
+
+# Development
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+composer.lock
+package-lock.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Misc
+.vscode
+.idea
+*.iml
+*.code-workspace
