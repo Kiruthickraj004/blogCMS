@@ -150,19 +150,29 @@ class BlogController extends Controller
             'rejection_reason' => null,
         ]);
 
-        $adminEmail = config('mail.admin_email', env('ADMIN_EMAIL'));
-        if ($adminEmail) {
-            Mail::to($adminEmail)->send(new BlogSubmittedMail($blog->load('author')));
+        try {
+            $adminEmail = config('mail.admin_email') ?? env('ADMIN_EMAIL');
+            if ($adminEmail) {
+                Mail::to($adminEmail)->send(new BlogSubmittedMail($blog->load('author')));
+            }
+        } catch (\Exception $e) {
+            // Log email error but don't fail the request
+            \Illuminate\Support\Facades\Log::error('Failed to send blog submission email: ' . $e->getMessage());
         }
 
-        $this->stats->clearCaches();
+        try {
+            $this->stats->clearCaches($blog->user_id);
+        } catch (\Exception $e) {
+            // Log cache error but don't fail the request
+            \Illuminate\Support\Facades\Log::error('Failed to clear stats cache: ' . $e->getMessage());
+        }
 
-        return response()->json(['blog' => $blog, 'message' => 'Submitted for admin review.']);
+        return response()->json(['blog' => $blog->load('author'), 'message' => 'Submitted for admin review.']);
     }
 
     private function validateBlog(Request $request, ?Blog $blog = null): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'excerpt' => ['nullable', 'string', 'max:500'],
             'content' => ['required', 'string'],
@@ -170,6 +180,13 @@ class BlogController extends Controller
             'featured_image' => ['nullable', 'url', 'max:500'],
             'status' => ['sometimes', 'in:draft,pending'],
         ]);
+
+        // Convert empty strings to null for nullable fields
+        $validated['excerpt'] = $validated['excerpt'] ?: null;
+        $validated['category_id'] = $validated['category_id'] ?: null;
+        $validated['featured_image'] = $validated['featured_image'] ?: null;
+
+        return $validated;
     }
 
     private function authorizeBlog(Request $request, Blog $blog, bool $allowAdmin = false): void

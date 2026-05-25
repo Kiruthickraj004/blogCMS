@@ -42,7 +42,19 @@ export default function BlogEditor() {
     e.preventDefault();
     setLoading(true);
     try {
-      const payload = { ...form, category_id: form.category_id || null };
+      const payload = {
+        title: form.title,
+        excerpt: form.excerpt || null,
+        content: form.content,
+        category_id: form.category_id || null,
+        featured_image: form.featured_image || null,
+      };
+      
+      // Only include status when creating new blogs
+      if (!id) {
+        payload.status = form.status;
+      }
+      
       if (id) {
         await api.put(`/blogs/${id}`, payload);
         toast.success('Blog updated');
@@ -52,7 +64,14 @@ export default function BlogEditor() {
       }
       navigate('/author/blogs');
     } catch (err) {
-      toast.error('Save failed');
+      console.error('API Error:', err.response?.data); // Log the validation errors
+      const errors = err.response?.data?.errors;
+      if (errors) {
+        const errorMsg = Object.values(errors).flat().join(', ');
+        toast.error(errorMsg);
+      } else {
+        toast.error('Save failed');
+      }
     } finally {
       setLoading(false);
     }
