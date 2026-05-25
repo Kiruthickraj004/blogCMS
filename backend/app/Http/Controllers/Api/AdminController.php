@@ -1,10 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use App\Http\Controllers\Controller;
 use App\Enums\BlogStatus;
 use App\Enums\UserRole;
-use App\Http\Controllers\Controller;
 use App\Mail\AccountRemovedMail;
 use App\Mail\BlogApprovedMail;
 use App\Mail\BlogRejectedMail;

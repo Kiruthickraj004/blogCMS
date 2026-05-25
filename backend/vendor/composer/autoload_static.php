@@ -529,6 +529,7 @@ class ComposerStaticInit9a5b1921ee4cfd9aef4c33713cc24007
         'App\\Http\\Controllers\\Api\\LikeAndSubscriptionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/LikeAndSubscriptionController.php',
         'App\\Http\\Controllers\\Api\\StatsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/StatsController.php',
         'App\\Http\\Controllers\\Api\\ViewerController' => __DIR__ . '/../..' . '/app/Http/Controllers/Api/ViewerController.php',
+        'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Middleware\\EnsureRole' => __DIR__ . '/../..' . '/app/Http/Middleware/EnsureRole.php',
         'App\\Kernel' => __DIR__ . '/..' . '/laravel/pint/app/Kernel.php',
         'App\\Mail\\AccountRemovedMail' => __DIR__ . '/../..' . '/app/Mail/AccountRemovedMail.php',

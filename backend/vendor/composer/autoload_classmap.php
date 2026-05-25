@@ -22,6 +22,7 @@ return array(
     'App\\Http\\Controllers\\Api\\LikeAndSubscriptionController' => $baseDir . '/app/Http/Controllers/Api/LikeAndSubscriptionController.php',
     'App\\Http\\Controllers\\Api\\StatsController' => $baseDir . '/app/Http/Controllers/Api/StatsController.php',
     'App\\Http\\Controllers\\Api\\ViewerController' => $baseDir . '/app/Http/Controllers/Api/ViewerController.php',
+    'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Middleware\\EnsureRole' => $baseDir . '/app/Http/Middleware/EnsureRole.php',
     'App\\Kernel' => $vendorDir . '/laravel/pint/app/Kernel.php',
     'App\\Mail\\AccountRemovedMail' => $baseDir . '/app/Mail/AccountRemovedMail.php',

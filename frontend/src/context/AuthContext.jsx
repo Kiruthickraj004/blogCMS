@@ -9,9 +9,14 @@ export function AuthProvider({ children }) {
 
   const fetchUser = useCallback(async () => {
     try {
+      await initCsrf(); // Ensure CSRF token is initialized
       const { data } = await api.get('/user');
       setUser(data.user);
-    } catch {
+    } catch (error) {
+      // 401 is expected when user is not logged in
+      if (error.response?.status !== 401) {
+        console.error('Error fetching user:', error);
+      }
       setUser(null);
     } finally {
       setLoading(false);
@@ -23,14 +28,14 @@ export function AuthProvider({ children }) {
   }, [fetchUser]);
 
   const login = async (email, password, remember = false) => {
-    await initCsrf();
+    await initCsrf(); // Ensure CSRF token is initialized
     const { data } = await api.post('/login', { email, password, remember });
     setUser(data.user);
     return data.user;
   };
 
   const register = async (form) => {
-    await initCsrf();
+    await initCsrf(); // Ensure CSRF token is initialized
     const { data } = await api.post('/register', form);
     setUser(data.user);
     return data.user;

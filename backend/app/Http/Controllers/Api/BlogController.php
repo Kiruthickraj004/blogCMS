@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
-use App\Enums\BlogStatus;
 use App\Http\Controllers\Controller;
+use App\Enums\BlogStatus;
 use App\Mail\BlogSubmittedMail;
 use App\Models\Blog;
 use App\Models\Category;

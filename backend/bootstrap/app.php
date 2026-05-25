@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             EnsureFrontendRequestsAreStateful::class,
         ]);
+        $middleware->statefulApi();
         $middleware->alias([
             'role' => EnsureRole::class,
         ]);

@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
-use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
