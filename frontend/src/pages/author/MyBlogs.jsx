@@ -46,13 +46,17 @@ export default function MyBlogs() {
               <p className="mt-1 text-xs text-slate-500">{b.likes_count} likes</p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link to={`/author/edit/${b.id}`} className="btn-secondary text-sm">
-                Edit
-              </Link>
-              {['draft', 'rejected'].includes(b.status) && (
-                <button type="button" className="btn-primary text-sm" onClick={() => submit(b.id)}>
-                  Submit for review
-                </button>
+              {!isAdmin && (
+                <>
+                  <Link to={`/author/edit/${b.id}`} className="btn-secondary text-sm">
+                    Edit
+                  </Link>
+                  {['draft', 'rejected'].includes(b.status) && (
+                    <button type="button" className="btn-primary text-sm" onClick={() => submit(b.id)}>
+                      Submit for review
+                    </button>
+                  )}
+                </>
               )}
               <button type="button" className="btn-danger text-sm" onClick={() => remove(b.id)}>
                 Delete

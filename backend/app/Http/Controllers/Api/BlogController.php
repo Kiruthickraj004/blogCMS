@@ -104,12 +104,19 @@ class BlogController extends Controller
     {
         $validated = $this->validateBlog($request);
 
-        $blog = Blog::create([
+        $data = [
             ...$validated,
             'user_id' => $request->user()->id,
             'slug' => Str::slug($validated['title']).'-'.Str::random(5),
             'status' => BlogStatus::from($validated['status'] ?? 'draft'),
-        ]);
+        ];
+
+        // Set published_at if status is published
+        if ($data['status'] === BlogStatus::Published) {
+            $data['published_at'] = now();
+        }
+
+        $blog = Blog::create($data);
 
         $this->stats->clearCaches($request->user()->id);
 
@@ -172,13 +179,20 @@ class BlogController extends Controller
 
     private function validateBlog(Request $request, ?Blog $blog = null): array
     {
+        $user = $request->user();
+        
+        // Admin can set status to published, others only draft or pending
+        $allowedStatuses = $user->isAdmin() 
+            ? 'draft,pending,published'
+            : 'draft,pending';
+        
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'excerpt' => ['nullable', 'string', 'max:500'],
             'content' => ['required', 'string'],
             'category_id' => ['nullable', 'exists:categories,id'],
             'featured_image' => ['nullable', 'url', 'max:500'],
-            'status' => ['sometimes', 'in:draft,pending'],
+            'status' => ['sometimes', "in:{$allowedStatuses}"],
         ]);
 
         // Convert empty strings to null for nullable fields

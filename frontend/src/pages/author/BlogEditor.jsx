@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
 
 export default function BlogEditor() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
     title: '',
@@ -13,7 +15,7 @@ export default function BlogEditor() {
     content: '',
     category_id: '',
     featured_image: '',
-    status: 'draft',
+    status: isAdmin ? 'published' : 'draft',
   });
   const [loading, setLoading] = useState(false);
 
@@ -124,7 +126,11 @@ export default function BlogEditor() {
           value={form.status}
           onChange={(e) => setForm({ ...form, status: e.target.value })}
         >
-          <option value="draft">Save as draft</option>
+          {isAdmin ? (
+            <option value="published">Publish now</option>
+          ) : (
+            <option value="draft">Save as draft</option>
+          )}
         </select>
         <button type="submit" className="btn-primary" disabled={loading}>
           {loading ? 'Saving...' : 'Save'}

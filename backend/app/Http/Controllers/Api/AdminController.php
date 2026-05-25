@@ -41,10 +41,19 @@ class AdminController extends Controller
             'rejection_reason' => null,
         ]);
 
-        Mail::to($blog->author->email)->send(new BlogApprovedMail($blog->load('author')));
-        $this->stats->clearCaches($blog->user_id);
+        try {
+            Mail::to($blog->author->email)->send(new BlogApprovedMail($blog->load('author')));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send blog approved email: ' . $e->getMessage());
+        }
 
-        return response()->json(['blog' => $blog, 'message' => 'Blog approved and published.']);
+        try {
+            $this->stats->clearCaches($blog->user_id);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to clear stats cache: ' . $e->getMessage());
+        }
+
+        return response()->json(['blog' => $blog->load('author'), 'message' => 'Blog approved and published.']);
     }
 
     public function reject(Request $request, Blog $blog): JsonResponse
@@ -62,10 +71,19 @@ class AdminController extends Controller
             'rejection_reason' => $validated['rejection_reason'],
         ]);
 
-        Mail::to($blog->author->email)->send(new BlogRejectedMail($blog->load('author')));
-        $this->stats->clearCaches($blog->user_id);
+        try {
+            Mail::to($blog->author->email)->send(new BlogRejectedMail($blog->load('author')));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send blog rejected email: ' . $e->getMessage());
+        }
 
-        return response()->json(['blog' => $blog, 'message' => 'Blog rejected. Author notified.']);
+        try {
+            $this->stats->clearCaches($blog->user_id);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to clear stats cache: ' . $e->getMessage());
+        }
+
+        return response()->json(['blog' => $blog->load('author'), 'message' => 'Blog rejected. Author notified.']);
     }
 
     public function users(Request $request): JsonResponse

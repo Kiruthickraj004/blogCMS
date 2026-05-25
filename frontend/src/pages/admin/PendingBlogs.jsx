@@ -14,17 +14,27 @@ export default function PendingBlogs() {
   }, []);
 
   const approve = async (id) => {
-    await api.post(`/admin/blogs/${id}/approve`);
-    toast.success('Blog approved');
-    load();
+    try {
+      await api.post(`/admin/blogs/${id}/approve`);
+      toast.success('Blog approved');
+      await load();
+    } catch (error) {
+      console.error('Approve error:', error.response?.data);
+      toast.error('Failed to approve blog');
+    }
   };
 
   const reject = async (id) => {
     const rejection_reason = reason[id];
     if (!rejection_reason?.trim()) return toast.error('Enter a rejection reason');
-    await api.post(`/admin/blogs/${id}/reject`, { rejection_reason });
-    toast.success('Blog rejected — author emailed');
-    load();
+    try {
+      await api.post(`/admin/blogs/${id}/reject`, { rejection_reason });
+      toast.success('Blog rejected — author emailed');
+      await load();
+    } catch (error) {
+      console.error('Reject error:', error.response?.data);
+      toast.error('Failed to reject blog');
+    }
   };
 
   return (
