@@ -20,15 +20,28 @@ const api = axios.create({
 api.defaults.xsrfCookieName = 'XSRF-TOKEN';
 api.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
 
+// Request interceptor to always include CSRF token
+api.interceptors.request.use((config) => {
+  // Extract XSRF token from cookies
+  const token = document.cookie
+    .split('; ')
+    .find(row => row.startsWith('XSRF-TOKEN='))
+    ?.split('=')[1];
+  
+  if (token) {
+    config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token);
+  }
+  
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
 export async function initCsrf() {
   try {
-    const response = await axios.get(`${API_URL}/sanctum/csrf-cookie`, { withCredentials: true });
-    // Manually extract and set XSRF token from cookie if needed
-    const token = document.cookie.split('; ').find(row => row.startsWith('XSRF-TOKEN='))?.split('=')[1];
-    if (token) {
-      api.defaults.headers.common['X-XSRF-TOKEN'] = decodeURIComponent(token);
-      axios.defaults.headers.common['X-XSRF-TOKEN'] = decodeURIComponent(token);
-    }
+    await axios.get(`${API_URL}/sanctum/csrf-cookie`, { 
+      withCredentials: true 
+    });
   } catch (error) {
     console.error('Error initializing CSRF:', error);
   }
