@@ -55,6 +55,8 @@ export default function Login() {
       </p>
       <p className="mt-2 text-center text-xs text-slate-400">
         Demo: admin@blogmanagement.test / password
+        Demo: author@blogmanagement.test / password
+        Demo: viewer@blogmanagement.test / password
       </p>
     </div>
   );
